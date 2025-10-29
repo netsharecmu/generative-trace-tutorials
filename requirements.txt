@@ -1,0 +1,41 @@
+# General
+GPUtil
+dask[complete]
+# pushbullet.py==0.9.1
+
+# BERT-FID
+accelerate >= 0.12.0
+torch >= 1.3
+datasets >= 1.8.0
+sentencepiece != 0.1.92
+protobuf
+evaluate
+scikit-learn
+seaborn
+geopandas
+
+# wandb
+tensorboard
+jupyter
+git+https://github.com/sniperyyc/transformers.git@v4.31.0-dev
+
+# NetShare
+-e src/netshare
+-e src/sdmetrics
+
+# CTGAN
+-e src/ctgan
+
+# REaLTabFormer
+-e src/realtabformer
+
+# TabDDPM
+toml
+
+# Crossformer
+einops
+
+# D3VAE: follow the repo of D3VAE to create a dedicated environment
+# Install CUDNN version 7.6 first
+# conda install -c conda-forge cudnn=7.6
+# export LD_LIBRARY_PATH=/ocean/projects/cis230033p/yyin4/.conda/envs/d3vae/lib

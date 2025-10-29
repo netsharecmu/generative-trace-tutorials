@@ -1,0 +1,10 @@
+{
+    "task_type": "regression",
+    "name": "Pcap",
+    "id": "pcap-id",
+    "train_size": 9968,
+    "val_size": 1425,
+    "test_size": 2848,
+    "n_num_features": 14,
+    "n_cat_features": 1
+}

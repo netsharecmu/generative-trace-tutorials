@@ -1,0 +1,10 @@
+*.pyc
+*.pyo
+
+*-raw.csv
+
+.DS_Store
+
+results/
+checkpoints/
+runs/

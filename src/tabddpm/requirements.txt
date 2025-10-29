@@ -1,0 +1,46 @@
+catboost==1.0.3
+category-encoders==2.3.0
+dython==0.5.1
+icecream==2.1.2
+libzero==0.0.8
+numpy==1.21.4
+optuna==2.10.1
+pandas==1.3.4
+pyarrow==6.0.0
+rtdl==0.0.9
+scikit-learn==1.0.2
+scipy==1.7.2
+skorch==0.11.0
+tomli-w==0.4.0
+tomli==1.2.2
+tqdm==4.62.3
+
+# smote
+imbalanced-learn==0.7.0
+
+# tvae
+rdt==0.6.4 
+
+# self-added for running driver.py
+toml
+config_io
+
+# General
+GPUtil
+dask[complete]
+pushbullet.py==0.9.1
+
+# BERT-FID
+accelerate >= 0.12.0
+torch >= 1.3
+datasets >= 1.8.0
+sentencepiece != 0.1.92
+protobuf
+evaluate
+scikit-learn
+seaborn
+geopandas
+wandb
+tensorboard
+jupyter
+git+https://github.com/sniperyyc/transformers.git
