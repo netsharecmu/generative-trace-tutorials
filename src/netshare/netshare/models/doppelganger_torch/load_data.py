@@ -8,9 +8,9 @@ def load_data(path, sample_len, flag="train"):
 
     data_npz = np.load(os.path.join(path, "data_{}.npz".format(flag)))
     with open(os.path.join(path, "data_feature_output.pkl"), "rb") as f:
-        data_feature_outputs = pickle.load(f)
+        data_feature_outputs = pickle.load(f, allow_pickle=True)
     with open(os.path.join(path, "data_attribute_output.pkl"), "rb") as f:
-        data_attribute_outputs = pickle.load(f)
+        data_attribute_outputs = pickle.load(f, allow_pickle=True)
 
     data_feature = data_npz["data_feature"]
     data_attribute = data_npz["data_attribute"]
