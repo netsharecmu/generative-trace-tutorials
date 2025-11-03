@@ -13,22 +13,26 @@ import pandas as pd
 from config_io import Config
 
 # Change this if you are working on different platforms
-NETGPT_BASE_FOLDER = '/ocean/projects/cis230086p/yyin4/DeepStore'
+NETGPT_BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+NETGPT_DATA_FOLDER = os.path.join(NETGPT_BASE_FOLDER, 'data')
+NETGPT_DATA_SMALL_SCALE_FOLDER = os.path.join(NETGPT_DATA_FOLDER, 'small-scale')
+print("NETGPT_BASE_FOLDER:", NETGPT_BASE_FOLDER)
 
 # {model_name: [a list of configs]}. The first key is always the model name, for ease of parsing
 configs = Config()
 
 # NetShare
-# import netshare.configs.default as netshare_default_configs
-# print(netshare_default_configs.__path__)
+import netshare
+NETSHARE_BASE_FOLDER = os.path.dirname(os.path.abspath(netshare.__file__))
+
 configs['netshare'] = Config()
 base_config_netflow = Config.load_from_file(
-    os.path.join('src/netshare/examples/netflow/config_example_netflow_nodp.json'),
-    default_search_paths=['src/netshare/netshare/configs/default']
+    os.path.join(NETSHARE_BASE_FOLDER, '..', 'examples/netflow/config_example_netflow_nodp.json'),
+    default_search_paths=[os.path.join(NETSHARE_BASE_FOLDER, 'configs/default')]
 )
 for dataset in ['ugr16', 'cidds', 'ton']:
     c = copy.deepcopy(base_config_netflow)
-    c.global_config.original_data_file = f'../data/small-scale/{dataset}/raw.csv'
+    c.global_config.original_data_file = os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw.csv')
     c.pre_post_processor.config.truncate = 'none'
     c.global_config.n_chunks = 1
     c.model.config.batch_size = 512
@@ -50,12 +54,12 @@ for dataset in ['ugr16', 'cidds', 'ton']:
     configs['netshare'][dataset] = c
 
 base_config_pcap = Config.load_from_file(
-    os.path.join('src/netshare/examples/pcap/config_example_pcap_nodp.json'),
-    default_search_paths=['src/netshare/netshare/configs/default']
+    os.path.join(NETSHARE_BASE_FOLDER, '..', 'examples/pcap/config_example_pcap_nodp.json'),
+    default_search_paths=[os.path.join(NETSHARE_BASE_FOLDER, 'configs/default')]
 )
 for dataset in ['caida', 'dc', 'ca', 'm57']:
     c = copy.deepcopy(base_config_pcap)
-    c.global_config.original_data_file = f'../data/small-scale/{dataset}/raw.csv'
+    c.global_config.original_data_file = os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw.csv')
     c.pre_post_processor.config.truncate = 'none'
     c.pre_post_processor.config.max_flow_len = 5000
     c.global_config.n_chunks = 1
@@ -71,7 +75,7 @@ configs['realtabformer-tabular'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['realtabformer-tabular'][dataset] = Config(
         {
-            "raw_csv_file": f'../data/small-scale/{dataset}/raw.csv',
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw.csv'),
             "n_layer": 3,
             "n_head": 4,
             "n_embd": 128,
@@ -89,7 +93,7 @@ configs['realtabformer-timeseries'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['realtabformer-timeseries'][dataset] = Config(
         {
-            "raw_csv_file": f'../data/small-scale/{dataset}/raw.csv',
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw.csv'),
             "n_layer": 3,
             "n_head": 4,
             "n_embd": 128,
@@ -119,7 +123,7 @@ for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
             discrete_columns += ['label']
     configs['ctgan'][dataset] = Config(
         {
-            "raw_csv_file": f'../data/small-scale/{dataset}/raw_bits.csv',
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits.csv'),
             "discrete_columns": discrete_columns
         }
     )
@@ -141,7 +145,7 @@ for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
             discrete_columns += ['label']
     configs['tvae'][dataset] = Config(
         {
-            "raw_csv_file": f'../data/small-scale/{dataset}/raw_bits.csv',
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits.csv'),
             "discrete_columns": discrete_columns
         }
     )
@@ -166,7 +170,7 @@ for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
 
     configs['tabddpm'][dataset] = Config(
         {
-            "raw_csv_file": f'../data/small-scale/{dataset}/raw_bits.csv',
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits.csv'),
             "discrete_columns": discrete_columns,
             "target_column": target_column,
         }
@@ -177,9 +181,9 @@ configs['crossformer'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['crossformer'][dataset] = Config(
         {
-            "raw_csv_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/raw_bits_transformed_forecasting.csv'),
-            "column_info_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/column_info_transformed_forecasting.json'),
-            "encoder_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/encoder_transformed_forecasting.pkl'),
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits_transformed_forecasting.csv'),
+            "column_info_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/column_info_transformed_forecasting.json'),
+            "encoder_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/encoder_transformed_forecasting.pkl'),
         }
     )
 
@@ -188,9 +192,9 @@ configs['d3vae'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['d3vae'][dataset] = Config(
         {
-            "raw_csv_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/raw_bits_transformed_forecasting.csv'),
-            "column_info_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/column_info_transformed_forecasting.json'),
-            "encoder_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/encoder_transformed_forecasting.pkl'),
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits_transformed_forecasting.csv'),
+            "column_info_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/column_info_transformed_forecasting.json'),
+            "encoder_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/encoder_transformed_forecasting.pkl'),
         }
     )
 
@@ -199,9 +203,9 @@ configs['scinet'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['scinet'][dataset] = Config(
         {
-            "raw_csv_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/raw_bits_transformed_forecasting.csv'),
-            "column_info_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/column_info_transformed_forecasting.json'),
-            "encoder_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/encoder_transformed_forecasting.pkl'),
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits_transformed_forecasting.csv'),
+            "column_info_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/column_info_transformed_forecasting.json'),
+            "encoder_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/encoder_transformed_forecasting.pkl'),
         }
     )
 
@@ -210,9 +214,9 @@ configs['dlinear'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['dlinear'][dataset] = Config(
         {
-            "raw_csv_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/raw_bits_transformed_forecasting.csv'),
-            "column_info_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/column_info_transformed_forecasting.json'),
-            "encoder_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/encoder_transformed_forecasting.pkl'),
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits_transformed_forecasting.csv'),
+            "column_info_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/column_info_transformed_forecasting.json'),
+            "encoder_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/encoder_transformed_forecasting.pkl'),
         }
     )
 
@@ -221,9 +225,9 @@ configs['patchtst'] = Config()
 for dataset in ['caida', 'dc', 'ca', 'ugr16', 'cidds', 'ton', 'm57']:
     configs['patchtst'][dataset] = Config(
         {
-            "raw_csv_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/raw_bits_transformed_forecasting.csv'),
-            "column_info_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/column_info_transformed_forecasting.json'),
-            "encoder_file": os.path.join(NETGPT_BASE_FOLDER, f'data/small-scale/{dataset}/encoder_transformed_forecasting.pkl'),
+            "raw_csv_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/raw_bits_transformed_forecasting.csv'),
+            "column_info_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/column_info_transformed_forecasting.json'),
+            "encoder_file": os.path.join(NETGPT_DATA_SMALL_SCALE_FOLDER, f'{dataset}/encoder_transformed_forecasting.pkl'),
         }
     )
 
