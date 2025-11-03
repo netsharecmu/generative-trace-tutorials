@@ -26,6 +26,7 @@ setup(
         "pandas",
         "scikit-learn",
         "more-itertools",
+        "scipy==1.10.0",
         "gensim==3.8.3",
         "networkx",
         "notebook",
