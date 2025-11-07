@@ -5079,9 +5079,9 @@ def batch_eval(
 
 
 if __name__ == "__main__":
-    csv_path1 = '/home/steven/Projects/DeepStore/data/small-scale/caida/caida-first-1000000.csv'
+    csv_path1 = '../data/small-scale/caida/raw.csv'
     # csv_path2 = '/home/steven/Projects/DeepStore/results-long/small-scale/runs/realtabformer-tabular_caida2_20250513033548072/rtf_checkpoints/gen_data_60.csv'
-    csv_path2 = '/home/steven/Projects/DeepStore/results-long/small-scale/csv/tvae_caida_20250919142741787_epoch_1.csv'
+    csv_path2 = '../results/small-scale/csv/realtabformer-tabular_caida_20251106113258045.csv'
 
     real_df = pd.read_csv(csv_path1)
     gen_df = pd.read_csv(csv_path2)
@@ -5095,64 +5095,3 @@ if __name__ == "__main__":
     print("==================================")
     print(rst['flow_stateful'])
     print("==================================")
-
-    # print(flow_fivetuple_stateful_flowduration_distribution(real_df, gen_df))
-
-
-    # csv_path2_prefix = "/home/steven/Projects/DeepStore/results-long/small-scale/runs/realtabformer-tabular_caida2_20241230170520572/rtf_checkpoints/gen_data_"
-    # print(csv_path2_prefix)
-
-    # for e in range(5,61,5):
-    #     csv_path2 = f"{csv_path2_prefix}{e}.csv"
-    #     gen_df = read_network_packets(csv_path2)
-    #     rst = eval_metrics(real_df, gen_df, n=10)
-    #     avg_packet = rst["packet"]["avg"]
-    #     avg_stateless = rst["flow_stateless"]["avg"]
-    #     avg_stateful = rst["flow_stateful"]["avg"]
-    #     print(f"EPOCH {e}")
-    #     print(f"PacketAvg: {avg_packet}")
-    #     print(f"StatelessAvg: {avg_stateless}")
-    #     print(f"StatefulAvg: {avg_stateful}")
-    #     print("--------------------------------------------------")
-
-
-
-    # # Path to real CSV
-    # csv_path_real = '/ocean/projects/cis230086p/sdong3/DeepStore/data/small-scale/caida/raw.csv'
-    # # Path to file containing paths of generated CSVs
-    # gen_data_list_path = '/ocean/projects/cis230086p/sdong3/DeepStore/experiments/output/gen_caida.csv'
-
-    # # Load the real dataset
-    # real_df = pd.read_csv(csv_path_real)
-
-    # # List to store (path, packet_avg, stateless_avg, stateful_avg)
-    # avg_results = []
-
-    # # Read each path and evaluate
-    # with open(gen_data_list_path, 'r') as f:
-    #     for line in f:
-    #         gen_path = line.strip()
-    #         if not gen_path or not os.path.isfile(gen_path):
-    #             print(f"Skipped invalid path: {gen_path}")
-    #             continue
-
-    #         gen_df = pd.read_csv(gen_path)
-    #         rst = eval_metrics(real_df, gen_df, n=10)
-
-    #         avg_packet = rst["packet"]["avg"]
-    #         avg_stateless = rst["flow_stateless"]["avg"]
-    #         avg_stateful = rst["flow_stateful"]["avg"]
-
-    #         avg_results.append((gen_path, avg_packet, avg_stateless, avg_stateful))
-
-    #         print(f"Evaluated {gen_path}")
-    #         # print(f"  Packet Avg:     {avg_packet:.4f}")
-    #         # print(f"  Stateless Avg:  {avg_stateless:.4f}")
-    #         print(f"  Stateful Avg:   {avg_stateful:.4f}")
-    #         print("--------------------------------------------------")
-
-    # # Summary
-    # print("\n=== Summary of All Evaluations ===")
-    # for row in avg_results:
-    #     print(row)
-
