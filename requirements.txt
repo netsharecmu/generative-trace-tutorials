@@ -39,3 +39,6 @@ einops
 # Install CUDNN version 7.6 first
 # conda install -c conda-forge cudnn=7.6
 # export LD_LIBRARY_PATH=/ocean/projects/cis230033p/yyin4/.conda/envs/d3vae/lib
+
+# Lesley: had to manually install gensim due to dependency error
+# conda install -c conda-forge gensim
