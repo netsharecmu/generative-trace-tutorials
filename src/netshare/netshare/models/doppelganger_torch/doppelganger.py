@@ -186,6 +186,8 @@ class DoppelGANger(object):
 
         self.check_data()
 
+        data_attribute = data_attribute.astype(np.float32)
+        data_feature = data_feature.astype(np.float32)
         dataset = TensorDataset(
             torch.Tensor(data_attribute), torch.Tensor(data_feature)
         )
