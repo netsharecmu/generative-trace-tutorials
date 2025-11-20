@@ -1,6 +1,5 @@
 .DS_Store
 .vscode/
-data
 !src/crossformer/data
 archive
 results
