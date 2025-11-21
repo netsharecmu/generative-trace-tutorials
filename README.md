@@ -8,10 +8,25 @@ This repository contains tutorials and experiments for generative models on netw
 
 **Step 1:** Download datasets from [Google Drive link](https://drive.google.com/drive/folders/1l82vGWHRUhP-MM7ByauXYdo7pilk14IK?usp=drive_link) and put under `data/` folder.
 
-**Step 2:** Install dependencies using conda:
+**Step 2:** Create Conda environment:
 ```bash
 conda create --name generative-trace-tutorials python=3.9
 conda activate generative-trace-tutorials
+```
+Note: if `conda activate generative-trace-tutorials` fails, try the following command:
+```bash
+which conda
+```
+The output should be something like `/opt/modules/library/cpu/anaconda/3-2023.07-2/condabin/conda`, then run the following commands to activate the conda environment:
+```bash
+source /opt/modules/library/cpu/anaconda/3-2023.07-2/etc/profile.d/conda.sh
+conda activate generative-trace-tutorials
+```
+Make sure the path after `source` matches the output of `which conda`.
+
+**Step 3:** Install Dependencies:
+```bash
+conda install -c conda-forge "gensim==3.8.3"
 pip install -r requirements.txt
 ```
 

@@ -4,6 +4,7 @@
 archive
 results
 doc
+data/generated*
 
 rsync*.sh
 *.pkl
