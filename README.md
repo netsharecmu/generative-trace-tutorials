@@ -63,5 +63,9 @@ python3 driver.py \
 ```
 
 # TODO
+- [ ] Netshare
+- [ ] downstream tasks
+- [ ] driver
+- [ ] Privacy
 - [ ] Bump Python version to 3.12
 - [ ] Add support for M series Mac

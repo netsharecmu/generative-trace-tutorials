@@ -185,9 +185,12 @@ class DoppelGANger(object):
         self.writer = SummaryWriter(log_dir=log_dir)
 
         self.check_data()
-
-        data_attribute = data_attribute.astype(np.float32)
+        
+        print(type(data_attribute), data_attribute.dtype, data_attribute.shape)
+        print(type(data_feature), data_feature.dtype, data_feature.shape)
         data_feature = data_feature.astype(np.float32)
+        print(type(data_feature), data_feature.dtype, data_feature.shape)
+
         dataset = TensorDataset(
             torch.Tensor(data_attribute), torch.Tensor(data_feature)
         )

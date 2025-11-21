@@ -5,6 +5,8 @@ archive
 results
 doc
 data/generated*
+scripts/rtf_checkpoints/*
+scripts/netshare_work_folder/*
 
 rsync*.sh
 *.pkl
