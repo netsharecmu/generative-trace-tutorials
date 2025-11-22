@@ -35,6 +35,9 @@ toml
 # Crossformer
 einops
 
+# Application
+mmh3
+
 # D3VAE: follow the repo of D3VAE to create a dedicated environment
 # Install CUDNN version 7.6 first
 # conda install -c conda-forge cudnn=7.6

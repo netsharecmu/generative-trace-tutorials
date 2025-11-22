@@ -63,7 +63,7 @@ python3 driver.py \
 ```
 
 # TODO
-- [ ] Netshare
+- [X] Netshare
 - [ ] downstream tasks
 - [ ] driver
 - [ ] Privacy
