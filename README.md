@@ -1,71 +1,59 @@
-# Generative Trace Tutorials
-This repository contains tutorials and experiments for generative models on network trace datasets.
+# AINTEC Tutorial Instructions
+This repository contains tutorials and experiments for generative models on network trace datasets. This instruction is for AINTEC'2025 tutorial, which is taylored to its specific enviroment and setup. For general purpose use case please refer to the `README.md` in `main` branch.
 
-## Getting Started
+## Set up environement
 
 > [!NOTE]
-> **Hardware Requirements:** This project is currently tested and supported only on Linux (x86_64). M series Mac is not supported yet.
+> **Hardware Requirements:** This `README.md` is for AINTEC'2025 tutorial ONLY.
 
-**Step 1:** Download datasets from [Google Drive link](https://drive.google.com/drive/folders/1l82vGWHRUhP-MM7ByauXYdo7pilk14IK?usp=drive_link) and put under `data/` folder.
-
-**Step 2:** Create Conda environment:
+**Step 1:** Open a terminal window and connect to COARE Saliksik HPC using the following accounts:
 ```bash
-conda create --name generative-trace-tutorials python=3.9
-conda activate generative-trace-tutorials
+username: aintec-trainee-[01...40] # for trainees
+password (all accounts): aintec@2025
 ```
-Note: if `conda activate generative-trace-tutorials` fails, try the following command:
+On your terminal:
 ```bash
-which conda
-```
-The output should be something like `/opt/modules/library/cpu/anaconda/3-2023.07-2/condabin/conda`, then run the following commands to activate the conda environment:
-```bash
-source /opt/modules/library/cpu/anaconda/3-2023.07-2/etc/profile.d/conda.sh
-conda activate generative-trace-tutorials
-```
-Make sure the path after `source` matches the output of `which conda`.
-
-**Step 3:** Install Dependencies:
-```bash
-conda install -c conda-forge "gensim==3.8.3"
-pip install -r requirements.txt
+ssh <user>@saliksik.asti.dost.gov.ph
+#then enter password
 ```
 
-Note: D3VAE has special dependencies. Follow the [doc](requirements.txt).
-
-## Run experiments (Example)
+**Step 2:** Use this salloc command to allocate a GPU node to your account:
 ```bash
-python3 driver.py \
-    --config_partition <config_partition> \
-    --dataset_name ${dataset_name} \
-    --model_name ${model_name} \
-    --order_csv_by_timestamp
+salloc -p gpu_a100 -q 2c-1h_gpu-a100_1g.10g --gres=gpu:1 --reservation=aintec-workshop
 ```
-- `config_partition`: `small-scale` | `large-scale` | ... (see [config_small_scale.py](scripts/config_small_scale.py) for more details)
-- `dataset_name`: `caida | dc | ca | m57 | ugr16 | cidds | ton`
-- `model name`: 
-    - `realtabformer-tabular`
-    - `realtabformer-timeseries`
-    - `ctgan`
-    - `tabddpm`
-    - `crossformer`
-    - `d3vae`
-    - `scinet`
-    - `dlinear`
-    - `patchtst`
+Wait until a node is allocated to you.
 
-A quick example:
+**Step 3:** Use the module command to load the workshop environment:
 ```bash
-python3 driver.py \
-    --config_partition small-scale \
-    --dataset_name caida \
-    --model_name realtabformer-tabular \
-    --order_csv_by_timestamp
+module load aintec-2025
 ```
 
-# TODO
-- [X] Netshare
-- [ ] downstream tasks
-- [ ] driver
-- [ ] Privacy
-- [ ] Bump Python version to 3.12
-- [ ] Add support for M series Mac
+**Step 4:** Run this command to start the Jupyter Notebook:
+```bash
+srun run-notebook
+```
+
+**Step 5:** While the notebook is starting, open another terminal window run the ssh command printed by the previous command:
+```bash
+#look for the ssh command that looks like this and run it on another terminal window:
+ssh -vv -NL <port>:<hostname>:<port> <user>@saliksik.asti.dost.gov.ph
+```
+
+**Step 6:** Go back to the previous terminal window and use the localhost (127.0.0.1) link (the third link from the screenshot below) to connect to the notebook using a browser. You are now connected to COARE’s Saliksik HPC Cluster through Jupyter Notebook
+
+## Run experiments
+In this tutorial we have two datasets: 
+- **Tabular Dataset**: `data/sample_tabular_data.csv`.
+- **Network Dataset**: `data/caida-10k.csv`.
+
+For each dataset, we have notebooks for training, evaluation and downstream tasks.
+
+### Tabular Dataset
+- **Training:** We have `tabular_CTGAN.ipynb` using CTGAN and `tabular_RealTabFormer.ipynb` using RealTabFormer.
+- **Evaluation:** `tabular_quality_check.ipynb` evaluates the data quality using both average JSD and customized queries written by domain experts.
+- **Downstream Task:** `tabular_tasks.ipynb` using synthetic data for data augmentation in ML predictor training. We use two different ML predictors (SVM and Dicision Tree) here.
+
+### Network Dataset
+- **Training:** We have `network_ctgan.ipynb` using CTGAN and `network_netshare.ipynb` using NetShare.
+- **Evaluation:** `network_quality_check.ipynb` evaluates the data quality using both average JSD and customized queries written by domain experts.
+- **Downstream Task:** `network_tasks.ipynb` using synthetic data for network measurement system testing. Specifically we test two measurement algorithms (SpaceSaving and Count-Min Sketch+Heap) on their hit rate for the Top-K most frequent flow identification.
