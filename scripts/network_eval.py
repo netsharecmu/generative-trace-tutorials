@@ -209,10 +209,23 @@ def compute_dcr_privacy(real_df: pd.DataFrame,
     # For each synthetic record, find the minimum distance to any real record
     min_distances = dist_matrix.min(axis=1)
     
+    # Find the indices of closest real records for each synthetic record
+    closest_real_indices = dist_matrix.argmin(axis=1)
+    
     # Compute statistics
     dcr_5th = np.percentile(min_distances, 5)
     dcr_median = np.median(min_distances)
     dcr_mean = np.mean(min_distances)
+    
+    # Find the synthetic record with minimum DCR (highest privacy risk)
+    min_dcr_idx = np.argmin(min_distances)
+    min_dcr_value = min_distances[min_dcr_idx]
+    min_dcr_closest_real_idx = closest_real_indices[min_dcr_idx]
+    
+    # Find the synthetic record with maximum DCR (lowest privacy risk)
+    max_dcr_idx = np.argmax(min_distances)
+    max_dcr_value = min_distances[max_dcr_idx]
+    max_dcr_closest_real_idx = closest_real_indices[max_dcr_idx]
     
     # Assess privacy risk based on 5th percentile DCR
     # These thresholds are heuristic and may need adjustment
@@ -229,32 +242,92 @@ def compute_dcr_privacy(real_df: pd.DataFrame,
         'dcr_median': float(dcr_median),
         'dcr_mean': float(dcr_mean),
         'privacy_risk': risk,
+        # Closest DCR (highest privacy risk)
+        'min_dcr_syn_idx': int(min_dcr_idx),
+        'min_dcr_value': float(min_dcr_value),
+        'min_dcr_real_idx': int(min_dcr_closest_real_idx),
+        'min_dcr_syn_record': syn_data.iloc[min_dcr_idx].to_dict(),
+        'min_dcr_real_record': real_data.iloc[min_dcr_closest_real_idx].to_dict(),
+        # Farthest DCR (lowest privacy risk)
+        'max_dcr_syn_idx': int(max_dcr_idx),
+        'max_dcr_value': float(max_dcr_value),
+        'max_dcr_real_idx': int(max_dcr_closest_real_idx),
+        'max_dcr_syn_record': syn_data.iloc[max_dcr_idx].to_dict(),
+        'max_dcr_real_record': real_data.iloc[max_dcr_closest_real_idx].to_dict(),
     }
     
     return results
 
 
-def print_dcr_results(dcr_results: dict) -> None:
+def print_dcr_results(dcr_results: dict, show_records: bool = True) -> None:
     """
     Pretty print DCR privacy metric results.
     
     Args:
         dcr_results: Output from compute_dcr_privacy()
+        show_records: If True, display the closest and farthest record pairs
     """
-    print("=" * 80)
-    print("Distance to Closest Record (DCR) Privacy Analysis")
-    print("=" * 80)
-    print(f"DCR 5th Percentile: {dcr_results['dcr_5th_percentile']:.4f}")
-    print(f"DCR Median:         {dcr_results['dcr_median']:.4f}")
-    print(f"DCR Mean:           {dcr_results['dcr_mean']:.4f}")
-    print(f"Privacy Risk:       {dcr_results['privacy_risk']}")
-    print()
-    print("Interpretation:")
-    print("  - Lower DCR values indicate higher privacy risk (synthetic records are")
-    print("    very similar to training records, suggesting potential memorization)")
-    print("  - Higher DCR values indicate better privacy (synthetic records are")
-    print("    more different from training records)")
-    print("=" * 80)
+    # Configure pandas display options to show all columns
+    with pd.option_context('display.max_columns', None,
+                           'display.max_colwidth', None,
+                           'display.width', None,
+                           'display.precision', 4):
+        
+        print("=" * 80)
+        print("Distance to Closest Record (DCR) Privacy Analysis")
+        print("=" * 80)
+        print(f"DCR 5th Percentile: {dcr_results['dcr_5th_percentile']:.4f}")
+        print(f"DCR Median:         {dcr_results['dcr_median']:.4f}")
+        print(f"DCR Mean:           {dcr_results['dcr_mean']:.4f}")
+        print(f"Privacy Risk:       {dcr_results['privacy_risk']}")
+        print()
+        print("Interpretation:")
+        print("  - Lower DCR values indicate higher privacy risk (synthetic records are")
+        print("    very similar to training records, suggesting potential memorization)")
+        print("  - Higher DCR values indicate better privacy (synthetic records are")
+        print("    more different from training records)")
+        print("=" * 80)
+        
+        if show_records:
+            print()
+            print("=" * 80)
+            print("CLOSEST DCR RECORD (Highest Privacy Risk)")
+            print("=" * 80)
+            print(f"Distance: {dcr_results['min_dcr_value']:.4f}")
+            print(f"Synthetic Record Index: {dcr_results['min_dcr_syn_idx']}")
+            print(f"Closest Real Record Index: {dcr_results['min_dcr_real_idx']}")
+            print()
+            
+            # Create DataFrame with both records for side-by-side comparison
+            min_df = pd.DataFrame([
+                dcr_results['min_dcr_syn_record'],
+                dcr_results['min_dcr_real_record']
+            ], index=['Synthetic', 'Real'])
+            
+            print("Record Comparison (Side-by-Side):")
+            print(min_df.to_string())
+            print()
+            print("=" * 80)
+            
+            print()
+            print("=" * 80)
+            print("FARTHEST DCR RECORD (Lowest Privacy Risk)")
+            print("=" * 80)
+            print(f"Distance: {dcr_results['max_dcr_value']:.4f}")
+            print(f"Synthetic Record Index: {dcr_results['max_dcr_syn_idx']}")
+            print(f"Closest Real Record Index: {dcr_results['max_dcr_real_idx']}")
+            print()
+            
+            # Create DataFrame with both records for side-by-side comparison
+            max_df = pd.DataFrame([
+                dcr_results['max_dcr_syn_record'],
+                dcr_results['max_dcr_real_record']
+            ], index=['Synthetic', 'Real'])
+            
+            print("Record Comparison (Side-by-Side):")
+            print(max_df.to_string())
+            print()
+            print("=" * 80)
 
 
 def plot_dcr_distribution(dcr_results: dict) -> None:
