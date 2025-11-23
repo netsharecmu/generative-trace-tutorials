@@ -24,6 +24,11 @@ Wait until a node is allocated to you.
 ```bash
 module load aintec-2025
 ```
+Then run the following commands in `generative-trace-tutorials` folder to install the dependencies:
+```bash
+pip install mmh3
+pip install -e src/netshare
+```
 
 **Step 4:** Run this command to start the Jupyter Notebook:
 ```bash
