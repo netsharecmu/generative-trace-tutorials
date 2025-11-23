@@ -6,49 +6,38 @@ This repository contains tutorials and experiments for generative models on netw
 > [!NOTE]
 > **Hardware Requirements:** This `README.md` is for AINTEC'2025 tutorial ONLY.
 
-**Step 1:** Open a terminal window and connect to COARE Saliksik HPC using the following accounts:
-```bash
-username: aintec-trainee-[01...40] # for trainees
-password (all accounts): aintec@2025
-```
-On your terminal:
-```bash
-ssh <user>@saliksik.asti.dost.gov.ph
-#then enter password
-```
 
-**Step 2:** Clone the repo to your server
+**Step 1:** Clone the repo to your server
 ```bash
+cd scratch3
 git clone https://github.com/netsharecmu/generative-trace-tutorials.git
 cd generative-trace-tutorials
 ```
 
-**Step 3:** Use this salloc command to allocate a GPU node to your account:
+**Step 2:** Use this salloc command to allocate a GPU node to your account:
 ```bash
 salloc -p gpu_a100 -q 2c-1h_gpu-a100_1g.10g --gres=gpu:1 --reservation=aintec-workshop
 ```
 Wait until a node is allocated to you.
 
-**Step 4:** Use the module command to load the workshop environment:
+**Step 3:** Use the module command to load the workshop environment:
 ```bash
 module load aintec-2025
 ```
 
-**Step 5:** Run this command to start the Jupyter Notebook:
+**Step 4:** Run this command to start the Jupyter Notebook:
 ```bash
 srun run-notebook
 ```
 
-**Step 6:** While the notebook is starting, open another terminal window run the ssh command printed by the previous command:
+**Step 5:** While the notebook is starting, open another terminal window run the ssh command printed by the previous command:
 ```bash
 # look for the ssh command that looks like this and run it on another terminal window:
 ssh -vv -NL <port>:<hostname>:<port> <user>@saliksik.asti.dost.gov.ph
-
 # then enter the same password
-aintec@2025
 ```
 
-**Step 7:** Go back to the previous terminal window and use the localhost (127.0.0.1) link (the third link from the screenshot below) to connect to the notebook using a browser. You are now connected to COARE’s Saliksik HPC Cluster through Jupyter Notebook
+**Step 6:** Go back to the previous terminal window and use the localhost (127.0.0.1) link (the third link from the screenshot below) to connect to the notebook using a browser. You are now connected to COARE’s Saliksik HPC Cluster through Jupyter Notebook
 
 ## Run experiments
 In this tutorial we have two datasets: 
